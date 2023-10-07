@@ -1,1 +1,2 @@
 07/10/2023
+I have written a small page to demonstrate service workers and cache. The intent is to cache the 'helloWorld.html' file to demonstrate offline functionality. Further testing is needed.
