@@ -1,2 +1,4 @@
 07/10/2023
 I have written a small page to demonstrate service workers and cache. The intent is to cache the 'helloWorld.html' file to demonstrate offline functionality. Further testing is needed.
+09/10/2023
+I have set up an Django application to handle the remote database in the future, I am considering using DynamoDB to do this. I will further explore this once I learn more about OSM data and how to store it.
