@@ -7,12 +7,14 @@
     <h1>To-Do List</h1>
     <input type="text" id="task" placeholder="Enter task:">
     <button id="addTask">Add Task</button>
-    <ul id="taskList"></ul>
+    <ul id="taskList">
+        <li></li>
+    </ul>
     <script>
         const request = indexedDB.open("ToDoListDB", 1);
         request.onupgradeneeded = function (event) {
             const db = event.target.result;
-            db.createObjectsStore("tasks", {keypath: "id", autoIncrement: true});
+            db.createObjectStore("tasks", {keypath: "id", autoIncrement: true});
         };
 
         request.onsuccess = function (event) {
@@ -47,9 +49,9 @@
                 request.onsuccess = function (event) {
                     list.innerHTML = "";
                     const tasks = event.target.result;
-                    tasks.array.forEach(function (task) {
-                        const element = document.createElement("element");
-                        element.textContent = task.text;
+                    tasks.forEach(function (task) {
+                        const li = document.createElement("li");
+                        li.textContent = task.text;
                         list.appendChild(li);                        
                     });
                 }
