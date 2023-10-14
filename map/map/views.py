@@ -6,3 +6,6 @@ def hello_world(request):
 
 def to_do_list(request): 
     return render(request, "to-do-list.html")
+
+def canvas(request):
+    return render(request, "canvas.html")
