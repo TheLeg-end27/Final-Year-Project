@@ -4,3 +4,7 @@ I have written a small page to demonstrate service workers and cache. The intent
 I have set up an Django application to handle the remote database in the future, I am considering using DynamoDB to do this. I will further explore this once I learn more about OSM data and how to store it.
 11/10/2023
 I have begun experimenting and for now believe that using IndexedDB is more suitable to Web Storage as it offers a better (and much needed) scalability. Further testing is needed to reach a conclusion on which technology to use. Lastly, a bug in which service workers were not being registered has been fixed.
+14/10/2023
+While IndexedDB involved a more significant learning curve, I have decided to go forward with IndexedDB as scalability is necessary. I have also made a basic page that allows users to draw shapes using HTML5 canvas. I am considering using Mapbox for processing and displaying OSM data, further experimentation is needed to decide which API is appropiate for the project's requirements.
+17/10/2023
+The canvas page works as intended. Next up I will make a simple page to display OSM data and explore possible forms of remote database storage, processing, and local storage of such data.
