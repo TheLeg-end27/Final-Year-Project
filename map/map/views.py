@@ -9,3 +9,6 @@ def to_do_list(request):
 
 def canvas(request):
     return render(request, "canvas.html")
+
+def raw_data_view(request):
+    return render(request, 'raw-data-view.html')

@@ -22,5 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.to_do_list, name= 'to_do_list'),
     path('hello-world/', views.hello_world, name = "hello_world"),
-    path('canvas/', views.canvas, name = "canvas")
+    path('canvas/', views.canvas, name = "canvas"),
+    path('raw-data-view/', views.raw_data_view, name = 'raw_data_view')
 ]
