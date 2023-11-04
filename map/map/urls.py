@@ -17,11 +17,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.to_do_list, name= 'to_do_list'),
     path('hello-world/', views.hello_world, name = "hello_world"),
     path('canvas/', views.canvas, name = "canvas"),
-    path('raw-data-view/', views.raw_data_view, name = 'raw_data_view')
-]
+    path('raw-data-view/', views.raw_data_view, name = 'raw_data_view'),
+    path('map/', views.map, name = 'map')
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

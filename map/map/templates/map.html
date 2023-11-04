@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    </head>
+    <body>
+        <div id="map" style="width: 600px; height: 400px;"></div>
+        <script>
+            var map = L.map('map').setView([-90, 0], 3);  // Latitude -90, Longitude 0, Zoom level 3
+            fetch('/static/antarctica_latest.geojson')
+                .then(response => response.json())
+                .then(data => {
+                L.geoJSON(data).addTo(map);
+            });
+        </script>
+    </body>
+</html>
