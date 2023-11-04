@@ -12,3 +12,5 @@ The canvas page works as intended. Next up I will make a simple page to display 
 This page allows an .osm file to be uploaded and its contents displayed as elements (nodes) in a list. The sample used was OSM data of Antartica. The next challenge will be to turn such data into a map, how to store this data in a remote database, and how to make it lightweight for the client to render. I will be experimenting with Mapbox to achieve this.
 23/10/2023
 Now that the page to display the contents of an .osm file works correctly. I will continue investigating Mapbox and possible integration with a remote and local database. So far the most notable candidates are MongoDB and DynamoDB for remote database and noSQL (as part of IndexedDB) for local database. 
+04/11/2023
+I have a better idea of the scope of my project now. The main idea is that the application allows users to leave messages behind (based on their location). This will be the main focus of the application, and for mapping I will use high level APIs such as Leaflet.js. I will further explore how this will affect the choice of other tools used.
