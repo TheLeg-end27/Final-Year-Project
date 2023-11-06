@@ -5,17 +5,17 @@
         <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     </head>
     <body>
-        <div id="map" style="width: 600px; height: 400px;"></div>
+        <div id="map" style="width: 1200px; height: 800px;"></div>
         <script>
             var map = L.map('map').setView([-90, 0], 3);  // Latitude -90, Longitude 0, Zoom level 3
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
-            fetch('/static/myapp/antarctica_latest.geojson')
-                .then(response => response.json())
-                .then(data => {
-                L.geoJSON(data).addTo(map);
-            });
+            //fetch('/static/myapp/antarctica_latest.geojson')
+            //    .then(response => response.json())
+            //    .then(data => {
+            //    L.geoJSON(data).addTo(map);
+            //});
         </script>
     </body>
 </html>
