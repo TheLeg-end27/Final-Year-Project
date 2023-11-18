@@ -14,3 +14,5 @@ This page allows an .osm file to be uploaded and its contents displayed as eleme
 Now that the page to display the contents of an .osm file works correctly. I will continue investigating Mapbox and possible integration with a remote and local database. So far the most notable candidates are MongoDB and DynamoDB for remote database and noSQL (as part of IndexedDB) for local database. 
 04/11/2023
 I have a better idea of the scope of my project now. The main idea is that the application allows users to leave messages behind (based on their location). This will be the main focus of the application, and for mapping I will use high level APIs such as Leaflet.js. I will further explore how this will affect the choice of other tools used.
+18/11/2023
+I now have a more clear idea on how to conduct testing. While so far testing has been done manually and using developer tools, I will implement unit tests with Jest for JavaScript. Django also has built in testing, however there is no code in the backend that requires testing at the moment. In the future end-to-end and integration testing will be implemented with APIs such as Selenium.

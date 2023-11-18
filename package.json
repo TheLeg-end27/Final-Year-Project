@@ -2,5 +2,8 @@
   "dependencies": {
     "geojson-vt": "^3.2.1",
     "leaflet-geojson-vt": "^1.1.0"
+  },
+  "scripts": {
+    "test": "jest"
   }
 }
