@@ -11,7 +11,7 @@
         <p>This is a simple HTML5 offline application</p>
         <script>
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('{% static "myapp/service-worker.js" %}', {scope: '/'})
+                navigator.serviceWorker.register('{% static "myapp/service-worker.js" %}', {scope: '/static/myapp/'})
                     .then(function(registration) {
                         console.log('Service Worker registered with scope:', registration.scope);
                     })

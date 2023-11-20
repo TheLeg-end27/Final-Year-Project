@@ -3,7 +3,7 @@ self.addEventListener('install', function(event) {
         caches.open('hello-world-cache').then(function(cache) {
             return cache.addAll([
                 '/',
-                '/helloWorld.html'
+                '/hello-world'
             ]);
         })
     );
