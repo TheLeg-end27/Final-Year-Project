@@ -1,5 +1,4 @@
 const { readOSMFile, parseAndDisplayData, displayOSMElements } = require("../static/myapp/raw-data-view.js")
-
 beforeEach(() => {
     document.body.innerHTML = `
       <ul id="osmDataList"></ul>

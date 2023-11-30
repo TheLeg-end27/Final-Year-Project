@@ -1,45 +1,97 @@
-const request = indexedDB.open("ToDoListDB", 1);
-request.onupgradeneeded = function (event) {
-    const db = event.target.result;
-    db.createObjectStore("tasks", {keypath: "id", autoIncrement: true});
-};
+function openDatabase() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open("ToDoListDB", 1);
 
-request.onsuccess = function (event) {
-    const db = event.target.result;
+        request.onupgradeneeded = function (event) {
+            const db = event.target.result;
+            db.createObjectStore("tasks", { keyPath: "id", autoIncrement: true });
+        };
+
+        request.onerror = function (event) {
+            reject(new Error("Database error: " + event.target.errorCode));
+        };
+
+        request.onsuccess = function (event) {
+            resolve(event.target.result);
+        };
+    });
+}
+
+function addTask(db, taskText) {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(["tasks"], "readwrite");
+        const store = transaction.objectStore("tasks");
+        const task = { text: taskText };
+        const request = store.add(task);
+
+        request.onsuccess = function () {
+            resolve();
+        };
+
+        request.onerror = function (event) {
+            reject(new Error("Error adding task: " + event.target.error));
+        };
+    });
+}
+
+function getAllTasks(db) {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(["tasks"], "readonly");
+        const store = transaction.objectStore("tasks");
+        const request = store.getAll();
+
+        request.onsuccess = function (event) {
+            resolve(event.target.result);
+        };
+
+        request.onerror = function (event) {
+            reject(new Error("Error fetching tasks: " + event.target.error));
+        };
+    });
+}
+
+function displayTasks(tasks, listElement) {
+    listElement.innerHTML = ""; 
+    tasks.forEach(task => {
+        const li = document.createElement("li");
+        li.textContent = task.text;
+        listElement.appendChild(li);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+    const db = await openDatabase();
     const addTaskButton = document.getElementById("addTask");
     const taskInput = document.getElementById("task");
     const taskList = document.getElementById("taskList");
 
-    addTaskButton.addEventListener("click", function() {
+    addTaskButton.addEventListener("click", async () => {
         const taskText = taskInput.value.trim();
         if (taskText) {
-            const transaction = db.transaction(["tasks"], "readwrite");
-            const store = transaction.objectStore("tasks");
-            const task = {text: taskText}
-            const addRequest = store.add(task);
-            addRequest.onsuccess = function (event) {
+            try {
+                await addTask(db, taskText);
                 taskInput.value = "";
-                displayTasks(store, taskList);
-            };
-            addRequest.onerror = function (event) {
-            console.error("Error adding task:", event.target.error);
-            };
+                const tasks = await getAllTasks(db);
+                displayTasks(tasks, taskList);
+            } catch (error) {
+                console.error(error.message);
+            }
         } else {
             console.log("Task text is empty or invalid.");
         }
-    })
+    });
 
-    function displayTasks(store, list) {
-        const request = store.getAll();
-        request.onsuccess = function (event) {
-            list.innerHTML = "";
-            const tasks = event.target.result;
-            tasks.forEach(function (task) {
-                const li = document.createElement("li");
-                li.textContent = task.text;
-                list.appendChild(li);                        
-            });
-        }
+    try {
+        const tasks = await getAllTasks(db);
+        displayTasks(tasks, taskList);
+    } catch (error) {
+        console.error(error.message);
     }
-    displayTasks(db.transaction(["tasks"]).objectStore("tasks"), taskList);
-};
+});
+
+module.exports = {
+    openDatabase,
+    addTask,
+    getAllTasks,
+    displayTasks
+}
