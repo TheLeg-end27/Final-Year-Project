@@ -1,14 +1,10 @@
 const { readOSMFile, parseAndDisplayData, displayOSMElements } = require("../static/myapp/raw-data-view.js")
 beforeEach(() => {
     document.body.innerHTML = `
+      <input type="file" id="fileInput">
       <ul id="osmDataList"></ul>
     `;
   });
-  
-document.body.innerHTML = `
-    <input type="file" id="fileInput">
-    <ul id="osmDataList"></ul>
-`;
 
 global.FileReader = jest.fn(() => ({
     readAsText: jest.fn(),
