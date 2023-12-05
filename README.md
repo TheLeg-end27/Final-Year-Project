@@ -15,3 +15,5 @@ To run the application, simply run the command `python manage.py runserver`. You
 ## Features to be implemented
 - Messaging functionality 
 - Automated content moderation 
+
+**Video demonstration:** https://youtu.be/MX8nTSGTuZI
