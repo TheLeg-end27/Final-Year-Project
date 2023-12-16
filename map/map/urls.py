@@ -19,6 +19,8 @@ from django.urls import include, path
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic.base import RedirectView
+from django.contrib.staticfiles.storage import staticfiles_storage
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,5 +28,6 @@ urlpatterns = [
     path('hello-world/', views.hello_world, name = "hello_world"),
     path('canvas/', views.canvas, name = "canvas"),
     path('raw-data-view/', views.raw_data_view, name = 'raw_data_view'),
-    path('map/', views.map, name = 'map')
+    path('map/', views.map, name = 'map'),
+    path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('favicon/favicon.ico')))
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

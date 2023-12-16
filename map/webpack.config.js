@@ -4,7 +4,7 @@ module.exports = {
   entry: './map/static/myapp/map.js', 
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist'), 
+    path: path.resolve(__dirname, './map/static/dist'), 
   },
   module: {
     rules: [
@@ -14,4 +14,9 @@ module.exports = {
       },
     ],
   },
+  resolve: {
+    fallback: {
+        "fs": false
+    },
+    }
 };

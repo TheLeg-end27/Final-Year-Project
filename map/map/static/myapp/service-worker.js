@@ -1,9 +1,11 @@
 self.addEventListener('install', function(event) {
     event.waitUntil(
-        caches.open('hello-world-cache').then(function(cache) {
+        caches.open('map-cache').then(function(cache) {
             return cache.addAll([
                 '/',
-                '/hello-world'
+                '/hello-world',
+                '/map',
+                '/static/myapp/output.mbtiles'
             ]);
         })
     );
