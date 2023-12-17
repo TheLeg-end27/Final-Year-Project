@@ -5,7 +5,7 @@ self.addEventListener('install', function(event) {
                 '/',
                 '/hello-world',
                 '/map',
-                '/static/myapp/output.mbtiles'
+                '/static/myapp/egham'
             ]);
         })
     );

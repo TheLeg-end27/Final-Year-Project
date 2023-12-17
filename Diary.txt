@@ -17,4 +17,6 @@ I have a better idea of the scope of my project now. The main idea is that the a
 18/11/2023
 I now have a more clear idea on how to conduct testing. While so far testing has been done manually and using developer tools, I will implement unit tests with Jest for JavaScript. Django also has built in testing, however there is no code in the backend that requires testing at the moment. In the future end-to-end and integration testing will be implemented with APIs such as Selenium.
 03/11/2023
-I have done some basic testing using Jest on my proofs of concepts. I now have a better picture of how to handle content moderation, which will be, first and foremost, using keyword lists. This approach has many limitations, so if development allows I intend to train a language model and implement human moderation. 
+I have done some basic testing using Jest on my proofs of concepts. I now have a better picture of how to handle content moderation, which will be, first and foremost, using keyword lists. This approach has many limitations, so if development allows I intend to train a language model and implement human moderation.
+17/12/2023
+After experimenting with many different ways of generating tiles (QGIS, Tilemaker, etc.), I have decided to use a small area of the UK with raster tiles. The biggest limiting factor is the limits on cache size. Just vector tiles of the UK would (generally) be 2GB big. I will be focusing on other features for the moment. 
