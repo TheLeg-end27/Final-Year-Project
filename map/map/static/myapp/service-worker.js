@@ -4,17 +4,32 @@ self.addEventListener('install', function(event) {
             return cache.addAll([
                 '/',
                 '/hello-world',
-                '/map',
-                '/static/myapp/egham'
+                '/map'
             ]);
         })
     );
 });
 
 self.addEventListener('fetch', function(event) {
-    event.respondWith(
-        caches.match(request).then(function(response) {
-            return response || fetch(event.request);
-        })
-    );
+    if (event.request.url.endsWith('.png')) {
+        event.respondWith(
+            caches.match(event.request).then(function(response) {
+                caches.match(event.request).then(function(response) {
+                    return response || fetch(event.request);
+                })
+                return fetch(event.request).then(function(networkResponse) {
+                    caches.open('map-cache').then(function(cache) {
+                        cache.put(event.request, networkResponse.clone());
+                    });
+                    return networkResponse;
+                });
+            })
+        );
+    } else {
+        event.respondWith(
+            caches.match(event.request).then(function(response) {
+                return response || fetch(event.request);
+            })
+        );
+    }
 });
