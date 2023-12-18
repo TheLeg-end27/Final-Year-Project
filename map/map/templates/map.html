@@ -26,7 +26,6 @@
     <body>
         <div id="map"></div>
         <script src="{% static 'dist/bundle.js' %}"></script>  
-        <!--<script type = "module" src="{% static 'myapp/map.js' %}"></script>!-->
         <script>
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('{% static "myapp/service-worker.js" %}', {scope: '/static/myapp/'})
@@ -43,5 +42,6 @@
                 minZoom: 13, maxZoom: 16, tms: false, attribution: 'Created by QGIS'
             }).addTo(container);
         </script>
+        <script type = "module" src="{% static 'myapp/map.js' %}"></script>
     </body>
 </html>
