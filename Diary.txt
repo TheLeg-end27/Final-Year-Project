@@ -19,4 +19,6 @@ I now have a more clear idea on how to conduct testing. While so far testing has
 03/11/2023
 I have done some basic testing using Jest on my proofs of concepts. I now have a better picture of how to handle content moderation, which will be, first and foremost, using keyword lists. This approach has many limitations, so if development allows I intend to train a language model and implement human moderation.
 17/12/2023
-After experimenting with many different ways of generating tiles (QGIS, Tilemaker, etc.), I have decided to use a small area of the UK with raster tiles. The biggest limiting factor is the limits on cache size. Just vector tiles of the UK would (generally) be 2GB big. I will be focusing on other features for the moment. 
+After experimenting with many different ways of generating tiles (QGIS, Tilemaker, etc.), I have decided to use a small area of the UK with raster tiles. The biggest limiting factor is the limits on cache size. Just vector tiles of the UK would (generally) be 2GB big. I will be focusing on other features for the moment.
+25/12/2023
+The main messaging functionality with IndexedDB and DynamoDB is complete. There is still some improvements that can be made with styling, as well as expanding the map. The next step is implementing moderation: first simple automated moderation with keyword lists, then human moderation and potentially using an LLM with AWS Comprehend.

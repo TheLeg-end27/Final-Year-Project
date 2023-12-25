@@ -13,7 +13,7 @@ import os
 from pathlib import Path
 
 AWS_REGION_NAME = 'eu-west-2'
-DYNAMODB_TABLE_NAME = 'map-messages'
+DYNAMODB_TABLE_NAME = 'messages'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

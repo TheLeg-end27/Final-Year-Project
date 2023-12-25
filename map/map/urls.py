@@ -29,5 +29,7 @@ urlpatterns = [
     path('canvas/', views.canvas, name = "canvas"),
     path('raw-data-view/', views.raw_data_view, name = 'raw_data_view'),
     path('map/', views.map, name = 'map'),
+    path('store-message', views.store_message, name='store_message'),
+    path('get-messages/', views.get_messages, name='get_essages'),
     path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('favicon/favicon.ico')))
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

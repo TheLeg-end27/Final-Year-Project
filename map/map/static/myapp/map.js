@@ -1,3 +1,18 @@
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+          }
+      }
+  }
+  return cookieValue;
+}
+
 function openDatabase() {
   return new Promise((resolve, reject) => {
       const request = indexedDB.open('MapMessagesDB', 1);
@@ -17,7 +32,21 @@ function openDatabase() {
   });
 }
 
-function storeMessage(lat, lng, message,  db) {
+function storeMessage(lat, lng, message) {
+  fetch('/store-message', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken') 
+    },
+    body: JSON.stringify({ lat, lng, message })
+  })
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error('Error:', error));
+}
+
+function storeMessageLocal(lat, lng, message,  db) {
   let transaction = db.transaction(['messages'], 'readwrite');
   let objectStore = transaction.objectStore('messages');
   let request = objectStore.add({ lat, lng, message });
@@ -30,8 +59,18 @@ function storeMessage(lat, lng, message,  db) {
       console.log("Message added to DB successfully");
   };
 }
-
-function loadMessages(db) {
+function loadMessages() {
+  fetch('/get-messages')
+  .then(response => response.json())
+  .then(messages => {
+      messages.forEach(msg => { 
+          L.marker([msg.latitude, msg.longitude]).addTo(map)
+           .bindPopup(msg.message);
+      });
+  })
+  .catch(error => console.error('Error:', error));
+}
+function loadMessagesLocal(db) {
   let transaction = db.transaction(['messages']);
   let objectStore = transaction.objectStore('messages');
   let request = objectStore.openCursor();
@@ -51,42 +90,21 @@ function loadMessages(db) {
 }
 
 function initMap(db) {
+  loadMessages();
   container.on('click', function(e) {
     let message = prompt("Enter your message for this location:", "");
     if (message) {
         L.marker([e.latlng.lat, e.latlng.lng]).addTo(container)
         .bindPopup(message);
-        storeMessage(e.latlng.lat, e.latlng.lng, message, db);
+        storeMessageLocal(e.latlng.lat, e.latlng.lng, message, db);
+        storeMessage(e.latlng.lat, e.latlng.lng, message);
     }
   });
 }
 
-
 openDatabase().then(db => {
-  loadMessages(db);
+  loadMessagesLocal(db);
   initMap(db);
 }).catch(error => {
   console.error("Failed to open DB: ", error);
 });
-//const container = L.map('map', {
-//  center: L.latLng(40.416775, -3.703790),
-//  zoom: 5,
-//});
-//var ml = MapLibreGL({
-
-//}).addTo(container);
-//ml.getMaplibreMap().addSource('data', {
-//  type: 'vector',
-//  url: "../static/surrey-latest.osm.pbf"
-//});
-//const vectorLayer = vectorTileLayer("../static/surrey-latest.osm.pbf", { 
-//  attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-//}).addTo(container); 
-//var mb = L.TileLayer.mbTiles('../static/output.mbtiles').addTo(container); //Data taken from MapTiler (non-commercial use only!)
-//L.vectorGrid.protobuf("../static/surrey-latest.osm.pbf", {
-//  attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-//}).addTo(container);
-//L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  //maxZoom: 19,
-  //attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-//}).addTo(container);
