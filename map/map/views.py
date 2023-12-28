@@ -18,7 +18,7 @@ def store_message(request):
     lng = data.get('lng') 
     message = data.get('message')
     item  = {
-        'id' : str(uuid.uuid1()),
+        'id' : str(uuid.uuid4()),
         'latitude' : str(lat),
         'longitude' : str(lng),
         'message' : message
