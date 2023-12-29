@@ -13,7 +13,6 @@ import os
 from pathlib import Path
 
 AWS_REGION_NAME = 'eu-west-2'
-DYNAMODB_TABLE_NAME = 'messages'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -103,7 +102,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': 'map/map/var/tmp/django_cache',
+    }
+}
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 

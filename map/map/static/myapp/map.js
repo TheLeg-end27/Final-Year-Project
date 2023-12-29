@@ -28,12 +28,13 @@ function openDatabase() {
       request.onupgradeneeded = function(event) {
           let db = event.target.result;
           db.createObjectStore('messages', { autoIncrement: true });
+          db.createObjectStore('new-messages', { autoIncrement: true });
       };
   });
 }
 
 function storeMessage(lat, lng, message) {
-  fetch('/store-message', {
+  return fetch('/store-message', {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json',
@@ -41,14 +42,19 @@ function storeMessage(lat, lng, message) {
     },
     body: JSON.stringify({ lat, lng, message })
   })
-  .then(response => response.json())
-  .then(data => console.log(data))
-  .catch(error => console.error('Error:', error));
+  .then(response => {
+    if (!response.ok) {
+      return response.json().then(json => {
+        throw {status: response.status, message: json.error || "Server responded with an error!"};
+      });
+    }
+    return response.json();
+  });
 }
 
 function storeMessageLocal(lat, lng, message,  db) {
-  let transaction = db.transaction(['messages'], 'readwrite');
-  let objectStore = transaction.objectStore('messages');
+  let transaction = db.transaction(['new-messages'], 'readwrite');
+  let objectStore = transaction.objectStore('new-messages');
   let request = objectStore.add({ lat, lng, message });
 
   request.onerror = function(event) {
@@ -59,17 +65,25 @@ function storeMessageLocal(lat, lng, message,  db) {
       console.log("Message added to DB successfully");
   };
 }
-function loadMessages() {
+function loadMessages(db) {
   fetch('/get-messages')
   .then(response => response.json())
   .then(messages => {
+      let transaction = db.transaction(['messages'], 'readwrite');
+      let objectStore = transaction.objectStore('messages');
+      objectStore.clear();
       messages.forEach(msg => { 
-          L.marker([msg.latitude, msg.longitude]).addTo(map)
+          let lat = msg.latitude;
+          let lng = msg.longitude;
+          let message = msg.message;
+          objectStore.add({lat, lng, message});
+          L.marker([lat, lng]).addTo(container)
            .bindPopup(msg.message);
       });
   })
   .catch(error => console.error('Error:', error));
 }
+
 function loadMessagesLocal(db) {
   let transaction = db.transaction(['messages']);
   let objectStore = transaction.objectStore('messages');
@@ -90,14 +104,24 @@ function loadMessagesLocal(db) {
 }
 
 function initMap(db) {
-  loadMessages();
+  loadMessages(db);
   container.on('click', function(e) {
     let message = prompt("Enter your message for this location:", "");
+    let containsKeyword = false;
     if (message) {
-        L.marker([e.latlng.lat, e.latlng.lng]).addTo(container)
-        .bindPopup(message);
-        storeMessageLocal(e.latlng.lat, e.latlng.lng, message, db);
-        storeMessage(e.latlng.lat, e.latlng.lng, message);
+        storeMessage(e.latlng.lat, e.latlng.lng, message).then(data => {
+        }).catch(error => {
+          console.error('Error:', error.message);
+          if (error.status === 422) {
+            containsKeyword = true;
+            alert("Your message contains inappropriate content.");
+          }
+        });
+        if (!containsKeyword) {
+          storeMessageLocal(e.latlng.lat, e.latlng.lng, message, db);
+          L.marker([e.latlng.lat, e.latlng.lng]).addTo(container)
+          .bindPopup(message);
+        }
     }
   });
 }

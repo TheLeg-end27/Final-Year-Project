@@ -6,9 +6,10 @@ import boto3
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 import uuid
+from map import dynamoDB
 
-dynamodb = boto3.resource('dynamodb', region_name ='eu-west-2')
-table = dynamodb.Table('messages')
+db = boto3.resource('dynamodb', region_name ='eu-west-2')
+table = db.Table('messages')
 
 @csrf_exempt
 @require_http_methods(["POST"])
@@ -17,6 +18,8 @@ def store_message(request):
     lat = data.get('lat')
     lng = data.get('lng') 
     message = data.get('message')
+    if dynamoDB.contains_moderation_keywords(message):
+        return JsonResponse({'Status' : 'Inappropiate message'}, status=422)
     item  = {
         'id' : str(uuid.uuid4()),
         'latitude' : str(lat),
