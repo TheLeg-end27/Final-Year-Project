@@ -52,6 +52,35 @@ function storeMessage(lat, lng, message) {
   });
 }
 
+function storeLocalMessageToRemote(db) {
+  let transaction = db.transaction(['new-messages'], 'readwrite');
+  let objectStore = transaction.objectStore('new-messages');
+  let request = objectStore.openCursor();
+
+  request.onerror = function(event) {
+    console.error("Error fetching messages from DB: ", event.target.error);
+  };
+
+  request.onsuccess = function(event) {
+    let cursor = event.target.result;
+    let containsKeyword = false;
+    if (cursor) {
+      storeMessage(cursor.value.lat, cursor.value.lng, cursor.value.message).then(data => {
+      }).catch(error => {
+        console.error('Error:', error.message);
+        if (error.status === 422) {
+          if (!containsKeyword) {
+            alert("Your message contains inappropriate content.");
+          }
+          containsKeyword = true;
+        }
+      });
+      cursor.continue();
+    }
+    objectStore.clear();
+  };
+}
+
 function storeMessageLocal(lat, lng, message,  db) {
   let transaction = db.transaction(['new-messages'], 'readwrite');
   let objectStore = transaction.objectStore('new-messages');
@@ -69,17 +98,18 @@ function loadMessages(db) {
   fetch('/get-messages')
   .then(response => response.json())
   .then(messages => {
-      let transaction = db.transaction(['messages'], 'readwrite');
-      let objectStore = transaction.objectStore('messages');
-      objectStore.clear();
-      messages.forEach(msg => { 
-          let lat = msg.latitude;
-          let lng = msg.longitude;
-          let message = msg.message;
-          objectStore.add({lat, lng, message});
-          L.marker([lat, lng]).addTo(container)
-           .bindPopup(msg.message);
-      });
+    markers.clearLayers();
+    let transaction = db.transaction(['messages'], 'readwrite');
+    let objectStore = transaction.objectStore('messages');
+    objectStore.clear();
+    messages.forEach(msg => { 
+        let lat = msg.latitude;
+        let lng = msg.longitude;
+        let message = msg.message;
+        objectStore.add({lat, lng, message});
+        var marker = L.marker([lat, lng]).bindPopup(msg.message);
+        markers.addLayer(marker);
+    });
   })
   .catch(error => console.error('Error:', error));
 }
@@ -90,39 +120,43 @@ function loadMessagesLocal(db) {
   let request = objectStore.openCursor();
 
   request.onerror = function(event) {
-      console.error("Error fetching messages from DB: ", event.target.error);
+    console.error("Error fetching messages from DB: ", event.target.error);
   };
-
   request.onsuccess = function(event) {
-      let cursor = event.target.result;
-      if (cursor) {
-          let marker = L.marker([cursor.value.lat, cursor.value.lng]).addTo(container);
-          marker.bindPopup(cursor.value.message);
-          cursor.continue();
-      }
+    let cursor = event.target.result;
+    if (cursor) {
+        let marker = L.marker([cursor.value.lat, cursor.value.lng]).addTo(container);
+        marker.bindPopup(cursor.value.message);
+        cursor.continue();
+    }
   };
 }
 
 function initMap(db) {
   loadMessages(db);
-  container.on('click', function(e) {
-    let message = prompt("Enter your message for this location:", "");
-    let containsKeyword = false;
-    if (message) {
-        storeMessage(e.latlng.lat, e.latlng.lng, message).then(data => {
-        }).catch(error => {
-          console.error('Error:', error.message);
-          if (error.status === 422) {
-            containsKeyword = true;
-            alert("Your message contains inappropriate content.");
-          }
-        });
-        if (!containsKeyword) {
-          storeMessageLocal(e.latlng.lat, e.latlng.lng, message, db);
-          L.marker([e.latlng.lat, e.latlng.lng]).addTo(container)
-          .bindPopup(message);
-        }
+  container.off('click').on('click', function(e) {
+    if (e.stopPropagation) {
+      e.stopPropagation();
     }
+    let message = prompt("Enter your message for this location:", "");
+    var containsKeyword = false;
+    if (message) {
+      storeMessage(e.latlng.lat, e.latlng.lng, message).then(data => {
+      }).catch(error => {
+        console.error('Error:', error.message);
+        if (error.status === 422) {
+          containsKeyword = true;
+          alert("Your message contains inappropriate content.");
+        }
+      });
+      if (!containsKeyword) {
+        storeLocalMessageToRemote(db);
+        storeMessageLocal(e.latlng.lat, e.latlng.lng, message, db);
+        var marker = L.marker([e.latlng.lat, e.latlng.lng])
+        .bindPopup(message);
+        markers.addLayer(marker);
+        }
+      }
   });
 }
 
