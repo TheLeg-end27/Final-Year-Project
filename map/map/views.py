@@ -7,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from map import dynamoDB
 from geohash2 import encode
+from django.contrib.auth.decorators import login_required
 
 db = boto3.resource('dynamodb', region_name ='eu-west-2')
 table = db.Table('messages')
@@ -48,3 +49,7 @@ def raw_data_view(request):
 
 def map(request):
     return render(request, 'map.html')
+
+@login_required
+def moderation(request):
+    return render(request, 'moderation.html')

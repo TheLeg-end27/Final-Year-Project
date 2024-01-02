@@ -24,6 +24,8 @@ from django.contrib.staticfiles.storage import staticfiles_storage
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include("django.contrib.auth.urls")),
+    path('moderation/', views.moderation, name= 'moderation'),
     path('', views.to_do_list, name= 'to_do_list'),
     path('hello-world/', views.hello_world, name = "hello_world"),
     path('canvas/', views.canvas, name = "canvas"),
