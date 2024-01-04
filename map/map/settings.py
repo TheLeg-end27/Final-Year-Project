@@ -17,6 +17,7 @@ AWS_REGION_NAME = 'eu-west-2'
 LOGIN_REDIRECT_URL = '/moderation'
 LOGOUT_REDIRECT_URL = '/map'
 
+AUTH_USER_MODEL = 'map.Moderator'
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 

@@ -11,6 +11,8 @@
         <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.20/leaflet-maplibre-gl.js"></script>
         <script src="https://unpkg.com/Leaflet.TileLayer.MBTiles@1.0.0/Leaflet.TileLayer.MBTiles.js"></script>
         <script src="https://unpkg.com/leaflet.vectorgrid@latest/dist/Leaflet.VectorGrid.bundled.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.Default.css" />
+        <script src="https://unpkg.com/leaflet.markercluster@1.3.0/dist/leaflet.markercluster.js"></script>
         <style>
         html, body {
         height: 100%;
@@ -41,6 +43,8 @@
             var tilesource_layer = L.tileLayer('{% static "myapp/egham/" %}' + '{z}/{x}/{y}.png', { 
                 minZoom: 13, maxZoom: 16, tms: false, attribution: 'Created by QGIS'
             }).addTo(container);
+            var markers = L.markerClusterGroup();
+            container.addLayer(markers);
         </script>
         <script type = "module" src="{% static 'myapp/map.js' %}"></script>
     </body>

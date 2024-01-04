@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+    <head>
+        <link rel="stylesheet" href='{% static "custom.css" %}'>
+    </head>
+    <body>
+        <h1>Welcome, {{request.user.username}}</h1>
+    </body>
+</html>

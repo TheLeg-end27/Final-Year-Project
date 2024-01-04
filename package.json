@@ -2,6 +2,8 @@
   "dependencies": {
     "@maptiler/leaflet-maptilersdk": "^2.0.0",
     "@maptiler/sdk": "^1.2.0",
+    "@popperjs/core": "^2.11.8",
+    "bootstrap": "^5.3.2",
     "crypto-browserify": "^3.12.0",
     "crypto-js": "^4.2.0",
     "geojson-vt": "^3.2.1",
@@ -19,12 +21,17 @@
     "test": "jest"
   },
   "devDependencies": {
+    "autoprefixer": "^10.4.16",
     "css-loader": "^6.8.1",
+    "html-webpack-plugin": "^5.6.0",
     "jest-environment-jsdom": "^29.7.0",
     "jsdom": "^23.0.1",
     "node-fetch": "^3.3.2",
     "parcel": "^2.10.3",
     "parcel-bundler": "^1.12.5",
+    "postcss-loader": "^7.3.4",
+    "sass": "^1.69.7",
+    "sass-loader": "^13.3.3",
     "style-loader": "^3.3.3",
     "webpack": "^5.89.0",
     "webpack-cli": "^5.1.4"

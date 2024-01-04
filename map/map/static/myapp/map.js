@@ -1,3 +1,4 @@
+import '../scss/styles.scss'
 function getCookie(name) {
   let cookieValue = null;
   if (document.cookie && document.cookie !== '') {
