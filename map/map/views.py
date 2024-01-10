@@ -8,6 +8,7 @@ from django.views.decorators.http import require_http_methods
 from map import dynamoDB
 from geohash2 import encode
 from django.contrib.auth.decorators import login_required
+import uuid
 
 db = boto3.resource('dynamodb', region_name ='eu-west-2')
 table = db.Table('messages')
@@ -27,13 +28,32 @@ def store_message(request):
         'longitude' : str(lng),
         'message' : message
     }
+    table = db.Table('messages')
     table.put_item(Item = item)
     return JsonResponse({'Status' : 'message stored successfully'})
 
 @require_http_methods(['GET'])
 def get_messages(request):
+    table = db.Table('messages')
     response = table.scan()
     return JsonResponse(response['Items'], safe=False)
+
+@require_http_methods(['POST'])
+def send_report(request):
+    table = db.Table('reports')
+    data = json.loads(request.body)
+    lat = data.get('lat')
+    lng = data.get('lng') 
+    message = data.get('message')
+    reason = data.get('reason')
+    item  = {
+        'report-id' : uuid.uuid4(),
+        'message-id' : str(encode(lat, lng, precision=12)),
+        'message' : message,
+        'reason' : reason
+    }
+    table.put_item(Item = item)
+    return JsonResponse({'Status' : 'report succesfully sent'})
 
 def hello_world(request):
     return render(request, 'hello-world.html')

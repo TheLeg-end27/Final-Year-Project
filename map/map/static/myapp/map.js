@@ -1,4 +1,16 @@
 import '../scss/styles.scss'
+const reportIcon = L.icon({
+  iconUrl: 'data:image/svg+xml,<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M5 20V14M5 5H19V14H5M5 5V14M5 5V4" stroke="%23d51515" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></g></svg>',
+  iconSize: [38, 95], 
+  iconAnchor: [22, 94], 
+  popupAnchor: [-3, -76] 
+});
+const reportIconUrl = 'data:image/svg+xml,<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M5 20V14M5 5H19V14H5M5 5V14M5 5V4" stroke="%23d51515" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></g></svg>';
+
+function hasClass(element, cls) {
+  return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
+}
+
 function getCookie(name) {
   let cookieValue = null;
   if (document.cookie && document.cookie !== '') {
@@ -51,6 +63,10 @@ function storeMessage(lat, lng, message) {
     }
     return response.json();
   });
+}
+
+function reportMessage() {
+
 }
 
 function storeLocalMessageToRemote(db) {
@@ -108,7 +124,13 @@ function loadMessages(db) {
         let lng = msg.longitude;
         let message = msg.message;
         objectStore.add({lat, lng, message});
-        var marker = L.marker([lat, lng]).bindPopup(msg.message);
+        var marker = L.marker([lat, lng]);
+        var popup = L.DomUtil.create('div', 'window');
+        popup.innerHTML = "<div class='popup-container'><img src='https://www.svgrepo.com/show/430432/line-flag.svg' class='report-icon' width=20/><p>" + message + "</p></div>";
+        popup.addEventListener('click', function(event){
+          console.log('popup clicked');
+        }); 
+        marker.bindPopup(popup);
         markers.addLayer(marker);
     });
   })
@@ -126,8 +148,14 @@ function loadMessagesLocal(db) {
   request.onsuccess = function(event) {
     let cursor = event.target.result;
     if (cursor) {
-        let marker = L.marker([cursor.value.lat, cursor.value.lng]).addTo(container);
-        marker.bindPopup(cursor.value.message);
+        let marker = L.marker([cursor.value.lat, cursor.value.lng]);
+        var popup = L.DomUtil.create('div', 'window');
+        popup.innerHTML = "<div class='popup-container'><img src='https://www.svgrepo.com/show/430432/line-flag.svg' class='report-icon' width=20/><p>" + cursor.value.message + "</p></div>";
+        popup.addEventListener('click', function(event){
+          console.log('popup clicked');
+        }); 
+        marker.bindPopup(popup);
+        markers.addLayer(marker);
         cursor.continue();
     }
   };
@@ -155,9 +183,15 @@ function initMap(db) {
         storeMessageLocal(e.latlng.lat, e.latlng.lng, message, db);
         var marker = L.marker([e.latlng.lat, e.latlng.lng])
         .bindPopup(message);
+        var popup = L.DomUtil.create('div', 'window');
+        popup.innerHTML = "<div class='popup-container'><img src='https://www.svgrepo.com/show/430432/line-flag.svg' class='report-icon' width=20/><p>" + message + "</p></div>";
+        popup.addEventListener('click', function(event){
+          console.log('popup clicked');
+        }); 
+        marker.bindPopup(popup);
         markers.addLayer(marker);
-        }
       }
+    }
   });
 }
 

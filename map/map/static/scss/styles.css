@@ -11976,6 +11976,12 @@ textarea.form-control-lg {
     display: none !important;
   }
 }
+.report-icon {
+  position: relative;
+  top: 0px;
+  right: 15px;
+}
+
 html, body {
   height: 100%;
 }

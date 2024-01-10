@@ -1,7 +1,13 @@
-@import "../../../node_modules/bootstrap/scss/bootstrap.scss"; 
+@import "../../../../node_modules/bootstrap/scss/bootstrap.scss"; 
 $body-background: #f7f7f7; 
 $form-background: #ffffff; 
 $primary-color: #829fbd; 
+
+.report-icon {
+  position: relative;
+  top: 0px;
+  right: 15px;
+}
 
 html, body {
   height: 100%;
