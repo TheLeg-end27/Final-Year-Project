@@ -11976,14 +11976,85 @@ textarea.form-control-lg {
     display: none !important;
   }
 }
+.modalReport {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.4rem;
+  width: 450px;
+  padding: 1.3rem;
+  min-height: 250px;
+  position: absolute;
+  top: 20%;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 15px;
+  z-index: 2;
+}
+
+.modalReport .flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modalReport input {
+  padding: 0.7rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 0.9em;
+}
+
+.modalReport p {
+  font-size: 0.9rem;
+  color: #777;
+  margin: 0.4rem 0 0.2rem;
+}
+
+.btn-close {
+  transform: translate(10px, -20px);
+  padding: 0.5rem 0.7rem;
+  background: #eee;
+  border-radius: 50%;
+}
+
+.hidden {
+  display: none;
+  z-index: -1;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  -webkit-backdrop-filter: blur(3px);
+          backdrop-filter: blur(3px);
+  z-index: 0;
+}
+
 .report-icon {
   position: relative;
   top: 0px;
   right: 15px;
 }
 
+#map {
+  height: 100vh;
+  width: 100%;
+  position: relative;
+  z-index: 0;
+}
+
 html, body {
   height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 body {

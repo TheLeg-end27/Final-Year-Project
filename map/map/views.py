@@ -38,6 +38,7 @@ def get_messages(request):
     response = table.scan()
     return JsonResponse(response['Items'], safe=False)
 
+@csrf_exempt
 @require_http_methods(['POST'])
 def send_report(request):
     table = db.Table('reports')

@@ -14,15 +14,15 @@ function hasClass(element, cls) {
 function getCookie(name) {
   let cookieValue = null;
   if (document.cookie && document.cookie !== '') {
-      const cookies = document.cookie.split(';');
-      for (let i = 0; i < cookies.length; i++) {
-          const cookie = cookies[i].trim();
-          if (cookie.substring(0, name.length + 1) === (name + '=')) {
-              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-              break;
-          }
-      }
-  }
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+        }
+    }
+}
   return cookieValue;
 }
 
@@ -65,8 +65,22 @@ function storeMessage(lat, lng, message) {
   });
 }
 
-function reportMessage() {
+function showReportForm() {
+  const modal = document.querySelector(".modalReport");
+  const overlay = document.querySelector(".overlay");
+  modal.classList.remove("hidden");
+  overlay.classList.remove("hidden");
+}
 
+function reportMessage(message, reason) {
+  return fetch('/send-report', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken' : getCookie('csrftoken')
+    },
+    body: JSON.stringify({message, reason})
+  }).catch(error => console.error('Error:', error));
 }
 
 function storeLocalMessageToRemote(db) {
@@ -111,6 +125,7 @@ function storeMessageLocal(lat, lng, message,  db) {
       console.log("Message added to DB successfully");
   };
 }
+
 function loadMessages(db) {
   fetch('/get-messages')
   .then(response => response.json())
@@ -128,6 +143,7 @@ function loadMessages(db) {
         var popup = L.DomUtil.create('div', 'window');
         popup.innerHTML = "<div class='popup-container'><img src='https://www.svgrepo.com/show/430432/line-flag.svg' class='report-icon' width=20/><p>" + message + "</p></div>";
         popup.addEventListener('click', function(event){
+          showReportForm();
           console.log('popup clicked');
         }); 
         marker.bindPopup(popup);
@@ -163,6 +179,21 @@ function loadMessagesLocal(db) {
 
 function initMap(db) {
   loadMessages(db);
+  const modal = document.querySelector(".modalReport");
+  const overlay = document.querySelector(".overlay");
+  const closeModalBtn = document.querySelector(".btn-close");
+  closeModalBtn.addEventListener("click", function(event) {
+      modal.classList.add("hidden");
+      overlay.classList.add("hidden");
+  });
+  document.getElementById("reportSubmit").addEventListener("click", function(event) {
+    event.preventDefault();
+    const reason = document.getElementById('reportReason').value;
+    console.log("Reporting message for reason:", reason);
+    modal.classList.add("hidden");
+    overlay.classList.add("hidden");
+    reportMessage("foo", reason);
+  });
   container.off('click').on('click', function(e) {
     if (e.stopPropagation) {
       e.stopPropagation();
@@ -184,8 +215,9 @@ function initMap(db) {
         var marker = L.marker([e.latlng.lat, e.latlng.lng])
         .bindPopup(message);
         var popup = L.DomUtil.create('div', 'window');
-        popup.innerHTML = "<div class='popup-container'><img src='https://www.svgrepo.com/show/430432/line-flag.svg' class='report-icon' width=20/><p>" + message + "</p></div>";
+        popup.innerHTML = "<div class='popup-container' data-toggle='modal' data-target='#reportReasonModal'><img src='https://www.svgrepo.com/show/430432/line-flag.svg' class='report-icon' width=20/><p>" + message + "</p></div>";
         popup.addEventListener('click', function(event){
+          showReportForm();
           console.log('popup clicked');
         }); 
         marker.bindPopup(popup);
