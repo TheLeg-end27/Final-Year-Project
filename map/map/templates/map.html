@@ -37,9 +37,10 @@
             var markers = L.markerClusterGroup();
             container.addLayer(markers);
         </script>
-        <section class="modalReport hidden" id="report">
+        <section class="modalReport hidden" id="report" data-lat='' data-lng=''>
             <div class="flex">
               <button class="btn-close">⨉</button>
+              <h3 id="reportMessage"></h3>
             </div>
             <label for="reportReason" class="col-form-label">Select a reason:</label>
             <select class="form-select" id="reportReason" name="reason">

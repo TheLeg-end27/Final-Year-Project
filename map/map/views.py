@@ -48,8 +48,8 @@ def send_report(request):
     message = data.get('message')
     reason = data.get('reason')
     item  = {
-        'report-id' : uuid.uuid4(),
-        'message-id' : str(encode(lat, lng, precision=12)),
+        'report-id' : str(uuid.uuid4()),
+        'message-id' : str(encode(float(lat), float(lng), precision=12)),
         'message' : message,
         'reason' : reason
     }

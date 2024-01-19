@@ -26,6 +26,12 @@ $primary-color: #829fbd;
   justify-content: space-between;
 }
 
+#reportMessage {
+  color: red;
+  flex-grow: 1; 
+  text-align: center; 
+}
+
 .modalReport input {
   padding: 0.7rem 1rem;
   border: 1px solid #ddd;
