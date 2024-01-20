@@ -3,6 +3,12 @@ $body-background: #f7f7f7;
 $form-background: #ffffff; 
 $primary-color: #829fbd; 
 
+header {
+  background-color: #a7b4c1;
+  box-shadow: 0 -6px 10px 5px rgba(0,0,0,0.5);
+  padding-right: 5%;
+  padding-left: 5%;
+}
 .modalReport {
   position: relative;
   display: flex;

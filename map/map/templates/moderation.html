@@ -3,9 +3,30 @@
 <html>
     <head>
         <link rel="stylesheet" href='{% static "scss/styles.css" %}'>
+        <title>Dashboard</title>
     </head>
     <body>
-        <h1>Welcome, {{request.user.username}}</h1>
-        <p><a href="{% url 'logout' %}">Log Out</a></p>
+        <div class="fixed-top">
+            <header class="row d-flex justify-content-between align-items-center py-3 mb-4 border-bottom">
+                <h1 class="col">Welcome, {{request.user.username}}</h1>
+                <div class="col text-end">
+                    <a href="{% url 'logout' %}" class="btn btn-outline-primary me-2">Log Out</a>
+                </div>
+            </header>
+            <div class="mt-4">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Message</th>
+                            <th>Reason</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </body>
 </html>
