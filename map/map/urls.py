@@ -35,5 +35,6 @@ urlpatterns = [
     path('get-messages/', views.get_messages, name='get_messages'),
     path('get-reports/', views.get_reports, name='get_reports'),
     path('send-report', views.send_report, name='send_report'),
+    path('remove-message', views.remove_message, name='remove_message'),
     path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('favicon/favicon.ico')))
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

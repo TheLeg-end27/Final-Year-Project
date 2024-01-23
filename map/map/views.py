@@ -11,7 +11,6 @@ from django.contrib.auth.decorators import login_required
 import uuid
 
 db = boto3.resource('dynamodb', region_name ='eu-west-2')
-table = db.Table('messages')
 
 @csrf_exempt
 @require_http_methods(["POST"])
@@ -43,6 +42,19 @@ def get_reports(request):
     table = db.Table('reports')
     response = table.scan()
     return JsonResponse(response['Items'], safe=False)
+
+@csrf_exempt
+@require_http_methods(['POST'])
+def remove_message(request):
+    data = json.loads(request.body)
+    report_id = data.get('reportId')
+    report_table = db.Table('reports')
+    message_table = db.Table('messages')
+    report_response = report_table.get_item(Key={'report-id': report_id})
+    message_id = report_response['Item']['message-id']
+    report_table.delete_item(Key={'report-id': report_id})
+    message_table.delete_item(Key={'id': message_id})
+    return JsonResponse({'Status' : 'message/report succesfully removed', "success" : True})
 
 @csrf_exempt
 @require_http_methods(['POST'])
