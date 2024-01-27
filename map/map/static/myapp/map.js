@@ -1,4 +1,5 @@
 import '../scss/styles.scss'
+import 'leaflet.markercluster'
 
 function hasClass(element, cls) {
   return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
@@ -191,8 +192,8 @@ function loadMessagesLocal(db) {
   };
 }
 
-function initMap(db) {
-  loadMessages(db);
+function initMap(db) { 
+  loadMessages(db); 
   const modal = document.querySelector(".modalReport");
   const overlay = document.querySelector(".overlay");
   const closeModalBtn = document.querySelector(".btn-close");

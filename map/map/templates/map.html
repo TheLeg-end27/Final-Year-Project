@@ -11,8 +11,7 @@
         <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.20/leaflet-maplibre-gl.js"></script>
         <script src="https://unpkg.com/Leaflet.TileLayer.MBTiles@1.0.0/Leaflet.TileLayer.MBTiles.js"></script>
         <script src="https://unpkg.com/leaflet.vectorgrid@latest/dist/Leaflet.VectorGrid.bundled.js"></script>
-        <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.Default.css" />
-        <script src="https://unpkg.com/leaflet.markercluster@1.3.0/dist/leaflet.markercluster.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     </head>
     <body>
@@ -33,9 +32,25 @@
             L.control.attribution({prefix: false}).addTo(container);
             var tilesource_layer = L.tileLayer('{% static "myapp/egham/" %}' + '{z}/{x}/{y}.png', { 
                 minZoom: 13, maxZoom: 16, tms: false, attribution: 'Created by QGIS'
-            }).addTo(container);
+            }).addTo(container); 
             var markers = L.markerClusterGroup();
-            container.addLayer(markers);
+            container.addLayer(markers);    
+            container.locate({setView: true, watch: true}) 
+            .on('locationfound', function(event) {
+                var marker = L.marker([event.latitude, event.longitude]).bindPopup("You are here");
+                var circle = L.circle([event.latitude, event.longitude], event.accuracy/2, {
+                    weight: 1,
+                    color: 'blue',
+                    fillColor: '#cacaca',
+                    fillOpacity: 0.2
+                });
+            container.addLayer(marker);
+            container.addLayer(circle);
+        })
+       .on('locationerror', function(e){
+            console.log(e);
+            alert("Location access denied.");
+        }); 
         </script>
         <section class="modalReport hidden" id="report" data-lat='' data-lng=''>
             <div class="flex">

@@ -5,7 +5,7 @@ from django.http import JsonResponse
 import boto3
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
-from map import dynamoDB
+from map import dynamodb
 from geohash2 import encode
 from django.contrib.auth.decorators import login_required
 import uuid
@@ -19,7 +19,7 @@ def store_message(request):
     lat = data.get('lat')
     lng = data.get('lng') 
     message = data.get('message')
-    if dynamoDB.contains_moderation_keywords(message):
+    if dynamodb.contains_moderation_keywords(message):
         return JsonResponse({'Status' : 'Inappropiate message'}, status=422)
     item  = {
         'id' : str(encode(lat, lng, precision=12)),
