@@ -11976,6 +11976,11 @@ textarea.form-control-lg {
     display: none !important;
   }
 }
+#map {
+  background: url("../background.jpg");
+  background-size: 70%;
+}
+
 header {
   background-color: #a7b4c1;
   box-shadow: 0 -6px 10px 5px rgba(0, 0, 0, 0.5);

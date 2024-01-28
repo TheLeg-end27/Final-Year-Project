@@ -13,6 +13,7 @@
         <script src="https://unpkg.com/leaflet.vectorgrid@latest/dist/Leaflet.VectorGrid.bundled.js"></script>
         <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        <link rel="stylesheet" href='{% static "scss/styles.css" %}'>
     </head>
     <body>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
@@ -28,7 +29,11 @@
                         console.error('Service Worker registration failed:', error);
                     });
             }
-            var container = L.map('map', {attributionControl: false}).setView([51.426, -0.553437], 14);
+            var locIcon = L.icon({
+                iconUrl: 'https://static-00.iconduck.com/assets.00/location-pin-icon-1536x2048-3kypjyl6.png',
+                iconSize: [30, 40]
+            });
+            var container = L.map('map', {attributionControl: false}).setView([51.426, -0.553437], 16);
             L.control.attribution({prefix: false}).addTo(container);
             var tilesource_layer = L.tileLayer('{% static "myapp/egham/" %}' + '{z}/{x}/{y}.png', { 
                 minZoom: 13, maxZoom: 16, tms: false, attribution: 'Created by QGIS'
@@ -37,8 +42,8 @@
             container.addLayer(markers);    
             container.locate({setView: true, watch: true}) 
             .on('locationfound', function(event) {
-                var marker = L.marker([event.latitude, event.longitude]).bindPopup("You are here");
-                var circle = L.circle([event.latitude, event.longitude], event.accuracy/2, {
+                var marker = L.marker([event.latitude, event.longitude], {icon: locIcon}).bindPopup("You are here");
+                var circle = L.circle([event.latitude, event.longitude], 200, {
                     weight: 1,
                     color: 'blue',
                     fillColor: '#cacaca',
@@ -46,11 +51,11 @@
                 });
             container.addLayer(marker);
             container.addLayer(circle);
-        })
-       .on('locationerror', function(e){
-            console.log(e);
-            alert("Location access denied.");
-        }); 
+            })
+            .on('locationerror', function(e){
+                console.log(e);
+                alert("Location access denied.");
+            }); 
         </script>
         <section class="modalReport hidden" id="report" data-lat='' data-lng=''>
             <div class="flex">
