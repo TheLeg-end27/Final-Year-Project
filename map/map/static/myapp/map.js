@@ -217,19 +217,21 @@ function initMap(db) {
     if (e.stopPropagation) {
       e.stopPropagation();
     }
-    let message = prompt("Enter your message for this location:", "");
-    var containsKeyword = false;
-    if (message) {
-      storeMessage(e.latlng.lat, e.latlng.lng, message).then(data => {
-      }).catch(error => {
-        console.error('Error:', error.message);
-        if (error.status === 422) {
-          containsKeyword = true;
-          alert("Your message contains inappropriate content.");
-        }
-      });
-      const lat = e.latlng.lat;
-      const lng = e.latlng.lng;
+    if (circle && circle.getBounds().contains(e.latlng)) {
+      console.log("Clicked inside the circle");
+      let message = prompt("Enter your message for this location:", "");
+      var containsKeyword = false;
+      if (message) {
+        storeMessage(e.latlng.lat, e.latlng.lng, message).then(data => {
+        }).catch(error => {
+          console.error('Error:', error.message);
+          if (error.status === 422) {
+            containsKeyword = true;
+            alert("Your message contains inappropriate content.");
+          }
+        });
+        const lat = e.latlng.lat;
+        const lng = e.latlng.lng;
       if (!containsKeyword) {
         storeLocalMessageToRemote(db);
         storeMessageLocal(lat, lng, message, db);
@@ -255,6 +257,7 @@ function initMap(db) {
         markers.addLayer(marker);
       }
     }
+  }
   });
 }
 

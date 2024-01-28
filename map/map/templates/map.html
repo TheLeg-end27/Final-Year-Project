@@ -37,13 +37,12 @@
             L.control.attribution({prefix: false}).addTo(container);
             var tilesource_layer = L.tileLayer('{% static "myapp/egham/" %}' + '{z}/{x}/{y}.png', { 
                 minZoom: 13, maxZoom: 16, tms: false, attribution: 'Created by QGIS'
-            }).addTo(container); 
-            var markers = L.markerClusterGroup();
-            container.addLayer(markers);    
+            }).addTo(container);   
+            let circle;
             container.locate({setView: true, watch: true}) 
             .on('locationfound', function(event) {
                 var marker = L.marker([event.latitude, event.longitude], {icon: locIcon}).bindPopup("You are here");
-                var circle = L.circle([event.latitude, event.longitude], 200, {
+                circle = L.circle([event.latitude, event.longitude], 200, {
                     weight: 1,
                     color: 'blue',
                     fillColor: '#cacaca',
@@ -56,6 +55,8 @@
                 console.log(e);
                 alert("Location access denied.");
             }); 
+            var markers = L.markerClusterGroup();
+            container.addLayer(markers);  
         </script>
         <section class="modalReport hidden" id="report" data-lat='' data-lng=''>
             <div class="flex">
