@@ -40,7 +40,7 @@ function openDatabase() {
   });
 }
 
-function storeMessage(lat, lng, message) {
+async function storeMessage(lat, lng, message) {
   return fetch('/store-message', {
     method: 'POST',
     headers: {
@@ -213,21 +213,19 @@ function initMap(db) {
     const lng = form.dataset.lng;
     reportMessage(messageText, reason, lat, lng);
   });
-  container.off('click').on('click', function(e) {
-    if (e.stopPropagation) {
-      e.stopPropagation();
-    }
+  container.off('click').on('click', async function(e) {
     if (circle && circle.getBounds().contains(e.latlng)) {
       console.log("Clicked inside the circle");
       let message = prompt("Enter your message for this location:", "");
       var containsKeyword = false;
       if (message) {
-        storeMessage(e.latlng.lat, e.latlng.lng, message).then(data => {
+        await storeMessage(e.latlng.lat, e.latlng.lng, message).then(data => {
         }).catch(error => {
           console.error('Error:', error.message);
           if (error.status === 422) {
             containsKeyword = true;
             alert("Your message contains inappropriate content.");
+            e.stopPropagation();
           }
         });
         const lat = e.latlng.lat;
