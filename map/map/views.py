@@ -43,20 +43,22 @@ def get_reports(request):
     response = table.scan()
     return JsonResponse(response['Items'], safe=False)
 
-@csrf_exempt
 @require_http_methods(['POST'])
 def remove_message(request):
     data = json.loads(request.body)
     report_id = data.get('reportId')
+    if not report_id:
+        return JsonResponse({'error': 'Missing report ID'}, status=400)
     report_table = db.Table('reports')
     message_table = db.Table('messages')
     report_response = report_table.get_item(Key={'report-id': report_id})
+    if not report_response:
+        return JsonResponse({'error': 'Report not found'}, status=404)
     message_id = report_response['Item']['message-id']
     report_table.delete_item(Key={'report-id': report_id})
     message_table.delete_item(Key={'id': message_id})
     return JsonResponse({'Status' : 'message/report succesfully removed', "success" : True})
 
-@csrf_exempt
 @require_http_methods(['POST'])
 def send_report(request):
     table = db.Table('reports')
