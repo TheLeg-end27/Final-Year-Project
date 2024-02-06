@@ -1,5 +1,3 @@
-console.log("js running");
-
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -58,3 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
       .catch(error => console.error('Error:', error));
   });
   
+module.exports = {
+    getCookie, 
+    removeMessage
+}

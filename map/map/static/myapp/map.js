@@ -1,10 +1,3 @@
-import '../scss/styles.scss'
-import 'leaflet.markercluster'
-
-function hasClass(element, cls) {
-  return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
-}
-
 function getCookie(name) {
   let cookieValue = null;
   if (document.cookie && document.cookie !== '') {
@@ -265,3 +258,10 @@ openDatabase().then(db => {
 }).catch(error => {
   console.error("Failed to open DB: ", error);
 });
+
+module.exports = {
+  storeMessage,
+  reportMessage,
+  openDatabase,
+  showReportForm
+}
