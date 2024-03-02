@@ -11,6 +11,7 @@ from django.contrib.auth.decorators import login_required
 import uuid
 
 db = boto3.resource('dynamodb', region_name ='eu-west-2')
+comprehend = boto3.client(service_name='comprehend', region_name='eu-west-2')
 
 @csrf_exempt
 @require_http_methods(["POST"])
@@ -21,6 +22,18 @@ def store_message(request):
     message = data.get('message')
     if dynamodb.contains_moderation_keywords(message):
         return JsonResponse({'Status' : 'Inappropiate message'}, status=422)
+    else:
+        try:
+            classification_response = comprehend.classify_document(
+                Text=message,
+                EndpointArn='arn:aws:comprehend:eu-west-2:998385411005:document-classifier/moderation/version/u', #use placeholder to avoid fees if not testing
+            )
+            labels = classification_response['Labels']
+            for label in labels:
+                if label['Name'] in ['OFFENSIVE_LANGUAGE', 'HATE_SPEECH']:
+                    return JsonResponse({'Status' : 'Inappropiate message'}, status=422)
+        except Exception as e:
+            print(f"Error: {e}")
     item  = {
         'id' : str(encode(lat, lng, precision=12)),
         'latitude' : str(lat),
