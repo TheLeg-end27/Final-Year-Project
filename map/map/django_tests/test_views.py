@@ -1,3 +1,8 @@
+"""
+Unit tests for map project.
+
+Tests Django views. 
+"""
 import boto3
 from django.test import TestCase
 from django.urls import reverse
@@ -9,7 +14,7 @@ import uuid
 
 @mock_aws
 class MessageTests(TestCase):
-
+    """Mocks AWS services."""
     def setUp(self):
         db = boto3.resource('dynamodb', region_name ='eu-west-2')
         self.message_table = db.create_table(
@@ -24,7 +29,7 @@ class MessageTests(TestCase):
             AttributeDefinitions=[{'AttributeName': 'report-id', 'AttributeType': 'S'}],
             ProvisionedThroughput={'ReadCapacityUnits': 1, 'WriteCapacityUnits': 1}
         )
-
+    """Tests that the message is stored in the database."""
     def test_store_message(self):
         with patch('map.dynamodb.contains_moderation_keywords', return_value=False):
             url = reverse('store_message') 
@@ -35,7 +40,7 @@ class MessageTests(TestCase):
 
             response = self.message_table.get_item(Key={'id':  str(encode(1.234, 2.345, precision=12))})  
             self.assertTrue('Item' in response)
-
+    """Tests that the messages are retrieved."""
     def test_get_messages(self):
         self.message_table.put_item(Item={'id': 'test_id','lat': str(1.234),'lng': str(2.234), 'message': 'Test Message'})
         url = reverse('get_messages') 
@@ -43,7 +48,7 @@ class MessageTests(TestCase):
         self.assertEqual(response.status_code, 200)
         items = json.loads(response.content)
         self.assertIn('Test Message', [item['message'] for item in items])
-
+    """Tests that the reports are retrieved."""
     def test_get_reports(self):
         self.report_table.put_item(Item={'report-id': '1', 'message-id': str(encode(1.432, 2.543, precision=12)),'message': 'mean message', 'reason': 'Inappropriate content'})
         url = reverse('get_reports')  
@@ -51,7 +56,7 @@ class MessageTests(TestCase):
         self.assertEqual(response.status_code, 200)
         reports = json.loads(response.content)
         self.assertTrue(any(report['reason'] == 'Inappropriate content' for report in reports))
-        
+    """Tests that the report is sent."""        
     def test_send_report(self):
         url = reverse('send_report')  
         data = {

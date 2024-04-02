@@ -1,3 +1,8 @@
+"""
+Selunium tests for map project.
+
+The functions that test user interaction. 
+"""
 import unittest
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
@@ -7,10 +12,11 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoAlertPresentException
 
 class MapInteractionTest(unittest.TestCase):
+    """Sets up WebDriver for Selenium."""
     def setUp(self):
         self.driver = webdriver.Chrome()
         self.driver.get("http://127.0.0.1:8000/map/")
-
+    """Tests that the prompt does not appear when clicking outside the circle surrounding user location."""
     def test_click_outside_circle(self):
         driver = self.driver
         driver.set_network_conditions(offline=True, latency=0, throughput=0)
@@ -28,7 +34,7 @@ class MapInteractionTest(unittest.TestCase):
             self.fail("Prompt appeared on click outside of circle.")
         except NoAlertPresentException:
             pass
-
+    """Tests that the prompt does appears when clicking inside the circle surrounding user location and that a message can be written."""
     def test_click_within_circle(self):
         driver = self.driver
         driver.set_network_conditions(offline=True, latency=0, throughput=0)

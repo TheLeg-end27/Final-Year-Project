@@ -1,3 +1,8 @@
+"""
+Views for map project.
+
+The functions that take and returns HTTP requests and responses. 
+"""
 import json
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -11,7 +16,7 @@ from django.contrib.auth.decorators import login_required
 import uuid
 
 db = boto3.resource('dynamodb', region_name ='eu-west-2')
-
+"""Stores message into dynamoaDB messages table."""
 @csrf_exempt
 @require_http_methods(["POST"])
 def store_message(request):
@@ -31,18 +36,21 @@ def store_message(request):
     table.put_item(Item = item)
     return JsonResponse({'Status' : 'message stored successfully'})
 
+"""Retrieves messages from the database."""
 @require_http_methods(['GET'])
 def get_messages(request):
     table = db.Table('messages')
     response = table.scan()
     return JsonResponse(response['Items'], safe=False)
 
+"""Retrieves reports from the database."""
 @require_http_methods(['GET'])
 def get_reports(request):
     table = db.Table('reports')
     response = table.scan()
     return JsonResponse(response['Items'], safe=False)
 
+"""Removes a message from the database."""
 @require_http_methods(['POST'])
 def remove_message(request):
     data = json.loads(request.body)
@@ -59,6 +67,7 @@ def remove_message(request):
     message_table.delete_item(Key={'id': message_id})
     return JsonResponse({'Status' : 'message/report succesfully removed', "success" : True})
 
+"""Sends a report to the database."""
 @require_http_methods(['POST'])
 def send_report(request):
     table = db.Table('reports')
@@ -76,21 +85,27 @@ def send_report(request):
     table.put_item(Item = item)
     return JsonResponse({'Status' : 'report succesfully sent'})
 
+"""Renders the hello world page."""
 def hello_world(request):
     return render(request, 'hello-world.html')
 
+"""Renders the to-do list page."""
 def to_do_list(request): 
     return render(request, 'to-do-list.html')
 
+"""Renders the canvas page."""
 def canvas(request):
     return render(request, 'canvas.html')
 
+"""Renders the OSM raw data page."""
 def raw_data_view(request):
     return render(request, 'raw-data-view.html')
 
+"""Renders the map page."""
 def map(request):
     return render(request, 'map.html')
 
+"""Renders the moderator page."""
 @login_required
 def moderation(request):
     return render(request, 'moderation.html')
