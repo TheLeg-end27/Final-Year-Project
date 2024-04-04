@@ -38,6 +38,10 @@ This repository is an application that allows users to leave location-based mess
     AWS Secret key: du7N1OhUY+fL+vpq6Abc39MfNAjBIzu3Ll5AfWr5
     ``` 
     Additionally, set the default region name and output format to eu-west-2 and json.
+    And to get the JavaScript packages:
+	```
+    npm install
+    ```
     To run the application: 
     ```
     python manage.py runserver
