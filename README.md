@@ -9,6 +9,7 @@ This repository is an application that allows users to leave location-based mess
 - `static/myapp/`: Contains the JavaScript code.
 - `templates/`: Contains the HTML code.
 - `map/map/`: Contains the above folders as well as Django views, models, URLs, and dynamoDB integration.
+- `Documents`: All reports in PDF.
 
 ## Installation and Setup
 - First, install the needed packages from the requirements.txt file.
